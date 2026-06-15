@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiniela Mundial 2026 · La familia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg:#0A1019; --panel:#111C2E; --panel2:#172741; --line:rgba(255,255,255,.09);
+    --green:#1CC56E; --green-d:#13A559; --amber:#FFC233; --amber-d:#E0A41E;
+    --chalk:#EDF2F8; --muted:#8593AA; --danger:#FF6B6B;
+    --shadow:0 18px 40px -18px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(28,197,110,.10), transparent 60%),
+      var(--bg);
+    color:var(--chalk); font-family:"Inter",system-ui,sans-serif; line-height:1.5;
+    -webkit-font-smoothing:antialiased; min-height:100vh;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px 80px}
+
+  /* Header */
+  header.top{
+    position:sticky;top:0;z-index:30;
+    background:linear-gradient(180deg, rgba(10,16,25,.96), rgba(10,16,25,.82));
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  }
+  .topinner{max-width:1080px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+  .crest{width:42px;height:42px;border-radius:11px;flex:none;
+    background:linear-gradient(150deg,var(--green),var(--green-d));
+    display:grid;place-items:center;font-size:22px;box-shadow:0 6px 16px -6px rgba(28,197,110,.7)}
+  .brand h1{font-family:"Anton",sans-serif;font-weight:400;letter-spacing:.5px;
+    font-size:20px;line-height:1;margin:0;text-transform:uppercase}
+  .brand span{display:block;font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+
+  nav.tabs{display:flex;gap:4px;background:var(--panel);padding:5px;border-radius:13px;border:1px solid var(--line)}
+  nav.tabs button{
+    appearance:none;border:0;background:transparent;color:var(--muted);
+    font-family:"Archivo",sans-serif;font-weight:700;font-size:13px;letter-spacing:.3px;
+    padding:9px 14px;border-radius:9px;cursor:pointer;transition:.18s;white-space:nowrap}
+  nav.tabs button:hover{color:var(--chalk)}
+  nav.tabs button.active{background:linear-gradient(160deg,var(--green),var(--green-d));color:#06231a;box-shadow:0 6px 14px -8px var(--green)}
+
+  /* Draft banner */
+  .banner{display:none;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 0;
+    background:linear-gradient(90deg, rgba(255,194,51,.14), rgba(255,194,51,.05));
+    border:1px solid rgba(255,194,51,.35);border-radius:12px;padding:11px 14px;font-size:13.5px}
+  .banner.show{display:flex}
+  .banner b{color:var(--amber)}
+  .banner .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+  section.tab{display:none;animation:fade .35s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .eyebrow{font-family:"Archivo",sans-serif;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+    font-size:11.5px;color:var(--green);margin:28px 0 10px}
+  h2.sec{font-family:"Anton",sans-serif;font-weight:400;font-size:30px;letter-spacing:.5px;
+    text-transform:uppercase;margin:2px 0 4px}
+  .lede{color:var(--muted);font-size:14px;margin:0 0 18px;max-width:640px}
+
+  /* ===== Próximo: scoreboard card ===== */
+  .cardnav{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .navbtn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--chalk);
+    width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:18px;display:grid;place-items:center;transition:.15s}
+  .navbtn:hover{background:var(--panel2);border-color:var(--green)}
+  .navbtn:disabled{opacity:.35;cursor:not-allowed}
+  .jumpbtn{margin-left:auto;appearance:none;border:0;cursor:pointer;font-family:"Archivo";font-weight:700;font-size:13px;
+    background:var(--panel2);color:var(--chalk);border:1px solid var(--line);padding:10px 14px;border-radius:10px}
+  .jumpbtn:hover{border-color:var(--green)}
+
+  .board{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);
+    background:
+      radial-gradient(900px 360px at 50% -30%, rgba(28,197,110,.16), transparent 70%),
+      linear-gradient(180deg,var(--panel2),var(--panel));
+    box-shadow:var(--shadow)}
+  /* chalk pitch lines */
+  .board::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background:
+      radial-gradient(circle at 50% 0, transparent 70px, rgba(255,255,255,.05) 71px, transparent 73px),
+      linear-gradient(90deg, transparent 49.7%, rgba(255,255,255,.05) 50%, transparent 50.3%);}
+  .board-pad{position:relative;padding:26px 24px 24px}
+  .board-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .gbadge{font-family:"Archivo";font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;
+    background:var(--amber);color:#3a2a00;padding:5px 11px;border-radius:999px}
+  .eb2{font-family:"Archivo";font-weight:700;letter-spacing:3px;font-size:11px;color:var(--muted);text-transform:uppercase}
+
+  .fixture{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin:6px 0 22px}
+  .team{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+  .team .flag{font-size:46px;line-height:1;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4))}
+  .team .tn{font-family:"Anton",sans-serif;font-weight:400;font-size:21px;letter-spacing:.5px;text-transform:uppercase;line-height:1.05}
+  .vs{font-family:"Anton",sans-serif;font-size:22px;color:var(--amber);letter-spacing:1px}
+
+  .preds{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;
+    border-top:1px dashed var(--line);padding-top:18px}
+  .chip{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+  .chip .who{font-family:"Archivo";font-weight:700;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chip .score{font-family:"Inter";font-weight:800;font-variant-numeric:tabular-nums;font-size:26px;margin-top:4px;color:var(--chalk)}
+  .chip .score.empty{color:var(--muted);font-weight:600}
+  .board-foot{margin-top:18px;font-size:12px;color:var(--muted);text-align:center;letter-spacing:.3px}
+
+  .dlrow{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{appearance:none;border:0;cursor:pointer;font-family:"Archivo";font-weight:700;font-size:13.5px;
+    padding:11px 16px;border-radius:11px;transition:.15s;display:inline-flex;align-items:center;gap:8px}
+  .btn.green{background:linear-gradient(160deg,var(--green),var(--green-d));color:#06231a}
+  .btn.green:hover{filter:brightness(1.06)}
+  .btn.ghost{background:var(--panel);color:var(--chalk);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--green)}
+  .btn.amber{background:linear-gradient(160deg,var(--amber),var(--amber-d));color:#3a2a00}
+
+  /* ===== Ranking ===== */
+  .ranktable{width:100%;border-collapse:separate;border-spacing:0 8px}
+  .ranktable th{font-family:"Archivo";font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted);text-align:left;padding:0 14px 4px}
+  .ranktable th.num,.ranktable td.num{text-align:center}
+  .ranktable td{background:var(--panel);padding:14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .ranktable td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px}
+  .ranktable td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0}
+  .ranktable tr.top td{background:linear-gradient(90deg,rgba(28,197,110,.14),var(--panel) 60%)}
+  .pos{font-family:"Anton";font-size:20px;width:34px;display:inline-block;text-align:center}
+  .rkname{font-family:"Archivo";font-weight:700;font-size:16px}
+  .pts{font-family:"Inter";font-weight:800;font-variant-numeric:tabular-nums;font-size:20px;color:var(--green)}
+  .sub{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+  .emptyState{color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:26px;text-align:center}
+
+  /* ===== Partidos / Pronósticos ===== */
+  .grouphead{font-family:"Archivo";font-weight:800;letter-spacing:1px;text-transform:uppercase;font-size:13px;
+    color:var(--amber);margin:22px 0 8px;display:flex;align-items:center;gap:10px}
+  .grouphead::after{content:"";height:1px;flex:1;background:var(--line)}
+  .mrow{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;margin-bottom:8px}
+  .mrow.played{border-color:rgba(28,197,110,.4)}
+  .mteams{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px}
+  .mteams .fl{font-size:18px}
+  .mteams .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mteams .mid{color:var(--muted);margin:0 4px}
+  .score-in{display:flex;align-items:center;gap:6px;flex:none}
+  .score-in input{width:46px;height:42px;text-align:center;font-family:"Inter";font-weight:800;font-size:18px;
+    background:var(--bg);color:var(--chalk);border:1px solid var(--line);border-radius:9px;font-variant-numeric:tabular-nums}
+  .score-in input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(28,197,110,.18)}
+  .score-in .dash{color:var(--muted);font-weight:700}
+  .clr{appearance:none;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;border-radius:8px}
+  .clr:hover{color:var(--danger)}
+
+  .selrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+  select{font-family:"Archivo";font-weight:700;font-size:15px;background:var(--panel2);color:var(--chalk);
+    border:1px solid var(--line);border-radius:11px;padding:11px 14px;cursor:pointer}
+  select:focus{outline:none;border-color:var(--green)}
+  .hint{color:var(--muted);font-size:13px}
+
+  .adminbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:26px}
+  .adminbox h3{font-family:"Archivo";font-weight:800;margin:0 0 6px;font-size:15px;letter-spacing:.3px}
+  .adminbox p{color:var(--muted);font-size:13px;margin:0 0 14px}
+  footer.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:40px;padding-top:18px;border-top:1px solid var(--line)}
+
+  @media (max-width:560px){
+    .brand h1{font-size:17px}
+    nav.tabs{width:100%;justify-content:space-between}
+    nav.tabs button{flex:1;padding:9px 6px}
+    h2.sec{font-size:25px}
+    .team .tn{font-size:17px}.team .flag{font-size:38px}
+    .mteams .nm{font-size:13px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topinner">
+    <div class="brand">
+      <div class="crest">⚽</div>
+      <div>
+        <h1>Quiniela Mundial 2026</h1>
+        <span>La familia · Fase de grupos</span>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-tab="proximo" class="active">Próximo</button>
+      <button data-tab="ranking">Ranking</button>
+      <button data-tab="partidos">Marcadores</button>
+      <button data-tab="pronos">Pronósticos</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="banner" id="banner">
+    <span>📝 Estás viendo tu <b>borrador local</b> (solo en este dispositivo).</span>
+    <div class="sp">
+      <button class="btn amber" onclick="exportData()">Publicar (descargar data.js)</button>
+      <button class="btn ghost" onclick="discardDraft()">Descartar cambios</button>
+    </div>
+  </div>
+
+  <!-- PRÓXIMO -->
+  <section class="tab active" id="proximo">
+    <div class="eyebrow">El que viene</div>
+    <h2 class="sec">Próximo partido</h2>
+    <p class="lede">Los pronósticos de todos en una sola imagen. Descárgala y compártela en el grupo antes de que ruede el balón.</p>
+
+    <div class="cardnav">
+      <button class="navbtn" id="prevM" onclick="moveCard(-1)" aria-label="Anterior">‹</button>
+      <button class="navbtn" id="nextM" onclick="moveCard(1)" aria-label="Siguiente">›</button>
+      <button class="jumpbtn" onclick="goNext()">Ir al próximo sin jugar →</button>
+    </div>
+
+    <div id="boardWrap"></div>
+
+    <div class="dlrow">
+      <button class="btn green" onclick="downloadCard()">📷 Descargar imagen</button>
+      <button class="btn ghost" onclick="switchTab('partidos')">Capturar resultado de este partido</button>
+    </div>
+  </section>
+
+  <!-- RANKING -->
+  <section class="tab" id="ranking">
+    <div class="eyebrow">Tabla general</div>
+    <h2 class="sec">Ranking</h2>
+    <p class="lede">Se actualiza solo conforme capturas los marcadores reales. Desempate: más marcadores exactos.</p>
+    <div id="rankWrap"></div>
+  </section>
+
+  <!-- PARTIDOS -->
+  <section class="tab" id="partidos">
+    <div class="eyebrow">Resultados reales</div>
+    <h2 class="sec">Marcadores</h2>
+    <p class="lede">Escribe el resultado final de cada partido. El ranking y los puntos se calculan automáticamente.</p>
+    <div id="matchWrap"></div>
+  </section>
+
+  <!-- PRONÓSTICOS -->
+  <section class="tab" id="pronos">
+    <div class="eyebrow">Capturar quiniela</div>
+    <h2 class="sec">Pronósticos</h2>
+    <p class="lede">Elige a un participante y captura lo que predijo en cada partido. Hazlo una vez, antes de que arranque.</p>
+    <div class="selrow">
+      <label class="hint" for="who">Participante:</label>
+      <select id="who" onchange="renderPronos()"></select>
+    </div>
+    <div id="pronosWrap"></div>
+  </section>
+
+  <div class="adminbox">
+    <h3>Publicar para que todos lo vean</h3>
+    <p>Tus capturas se guardan en este dispositivo. Para que tus primos vean los cambios en la página, descarga el archivo de datos y súbelo a tu repositorio (reemplaza <code>data.js</code>).</p>
+    <div class="dlrow">
+      <button class="btn amber" onclick="exportData()">⬇️ Descargar data.js</button>
+      <button class="btn ghost" onclick="document.getElementById('imp').click()">⬆️ Cargar data.js</button>
+      <input id="imp" type="file" accept=".js,.json,application/json,text/javascript" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+
+  <footer class="foot">
+    Quiniela familiar · 3 pts marcador exacto · 1 pt acertar ganador o empate · Hecho para compartir en WhatsApp
+  </footer>
+</div>
+
+<script src="./data.js"></script>
+<script>
+const DATA = window.QUINIELA_DATA;
+const LS_KEY = 'quiniela_draft_v2';
+const flag = t => (DATA.flags && DATA.flags[t]) || '⚽';
+const clone = o => JSON.parse(JSON.stringify(o));
+
+let state = loadState();
+let cardIdx = nextMatchIdx();
+
+function loadState(){
+  const base = { predictions: clone(DATA.predictions||{}), results: clone(DATA.results||{}), _draft:false };
+  DATA.participants.forEach(p=>{ if(!base.predictions[p]) base.predictions[p]={}; });
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){ const d=JSON.parse(raw);
+      if(d.predictions) base.predictions=d.predictions;
+      if(d.results) base.results=d.results;
+      base._draft=true;
+      DATA.participants.forEach(p=>{ if(!base.predictions[p]) base.predictions[p]={}; });
+    }
+  }catch(e){}
+  return base;
+}
+function saveDraft(){
+  state._draft=true;
+  localStorage.setItem(LS_KEY, JSON.stringify({predictions:state.predictions, results:state.results}));
+  renderBanner();
+}
+function discardDraft(){
+  if(!confirm('¿Borrar tus cambios locales y volver a lo publicado?')) return;
+  localStorage.removeItem(LS_KEY); location.reload();
+}
+function renderBanner(){ document.getElementById('banner').classList.toggle('show', !!state._draft); }
+
+/* ---- scoring ---- */
+function parsePair(x){
+  if(!Array.isArray(x)) return null;
+  const a=x[0], b=x[1];
+  if(a===''||a==null||b===''||b==null||isNaN(a)||isNaN(b)) return null;
+  return [Number(a),Number(b)];
+}
+function pts(pred,res){
+  pred=parsePair(pred); res=parsePair(res);
+  if(!res) return null;
+  if(!pred) return 0;
+  if(pred[0]===res[0]&&pred[1]===res[1]) return 3;
+  if(Math.sign(pred[0]-pred[1])===Math.sign(res[0]-res[1])) return 1;
+  return 0;
+}
+function standings(){
+  return DATA.participants.map(p=>{
+    let total=0,exact=0,played=0;
+    DATA.matches.forEach(m=>{
+      if(parsePair(state.results[m.id])){ played++;
+        const x=pts(state.predictions[p][m.id], state.results[m.id]);
+        total+=x; if(x===3) exact++;
+      }
+    });
+    return {name:p,total,exact,played};
+  }).sort((a,b)=> b.total-a.total || b.exact-a.exact || a.name.localeCompare(b.name));
+}
+function nextMatchIdx(){
+  const i=DATA.matches.findIndex(m=>!parsePair(state.results[m.id]));
+  return i<0 ? DATA.matches.length-1 : i;
+}
+
+/* ---- Próximo card ---- */
+function renderCard(){
+  const m=DATA.matches[cardIdx];
+  const total=DATA.matches.length;
+  const chips=DATA.participants.map(p=>{
+    const pr=parsePair(state.predictions[p][m.id]);
+    const sc = pr ? `${pr[0]}-${pr[1]}` : '—';
+    return `<div class="chip"><div class="who">${p}</div><div class="score ${pr?'':'empty'}">${sc}</div></div>`;
+  }).join('');
+  const played = parsePair(state.results[m.id]);
+  const tag = played ? `Final ${played[0]}-${played[1]}` : 'Aún no se juega';
+  document.getElementById('boardWrap').innerHTML = `
+    <div class="board" id="captureCard">
+      <div class="board-pad">
+        <div class="board-top">
+          <span class="gbadge">Grupo ${m.group}</span>
+          <span class="eb2">Partido ${cardIdx+1} de ${total}</span>
+        </div>
+        <div class="fixture">
+          <div class="team"><div class="flag">${flag(m.home)}</div><div class="tn">${m.home}</div></div>
+          <div class="vs">VS</div>
+          <div class="team"><div class="flag">${flag(m.away)}</div><div class="tn">${m.away}</div></div>
+        </div>
+        <div class="preds">${chips}</div>
+        <div class="board-foot">Pronósticos de la familia · ${tag}</div>
+      </div>
+    </div>`;
+  document.getElementById('prevM').disabled = cardIdx<=0;
+  document.getElementById('nextM').disabled = cardIdx>=total-1;
+}
+function moveCard(d){ cardIdx=Math.min(DATA.matches.length-1,Math.max(0,cardIdx+d)); renderCard(); }
+function goNext(){ cardIdx=nextMatchIdx(); renderCard(); }
+
+function downloadCard(){
+  const node=document.getElementById('captureCard');
+  if(typeof html2canvas!=='function'){ alert('No se pudo cargar el generador de imagen. Revisa tu conexión.'); return; }
+  html2canvas(node,{backgroundColor:'#111C2E',scale:2,useCORS:true}).then(canvas=>{
+    const m=DATA.matches[cardIdx];
+    const a=document.createElement('a');
+    a.download=`quiniela-${m.id}-${m.home}-vs-${m.away}.png`.replace(/\s+/g,'_');
+    a.href=canvas.toDataURL('image/png'); a.click();
+  }).catch(()=>alert('No se pudo generar la imagen.'));
+}
+
+/* ---- Ranking ---- */
+function renderRanking(){
+  const rows=standings();
+  const anyPlayed=rows.some(r=>r.played>0);
+  if(!anyPlayed){
+    document.getElementById('rankWrap').innerHTML =
+      `<div class="emptyState">Todavía no hay resultados. Captura marcadores en la pestaña <b>Marcadores</b> y el ranking aparecerá aquí.</div>`;
+    return;
+  }
+  const medal=['🥇','🥈','🥉'];
+  const body=rows.map((r,i)=>`
+    <tr class="${i<3?'top':''}">
+      <td><span class="pos">${medal[i]||(i+1)}</span></td>
+      <td><span class="rkname">${r.name}</span></td>
+      <td class="num"><span class="pts">${r.total}</span></td>
+      <td class="num"><span class="sub">${r.exact}</span></td>
+      <td class="num"><span class="sub">${r.played}</span></td>
+    </tr>`).join('');
+  document.getElementById('rankWrap').innerHTML = `
+    <table class="ranktable">
+      <thead><tr><th class="num">Pos</th><th>Participante</th><th class="num">Puntos</th><th class="num">Exactos</th><th class="num">Jugados</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
+}
+
+/* ---- Partidos (results) ---- */
+function renderMatches(){
+  let html='', g=null;
+  DATA.matches.forEach(m=>{
+    if(m.group!==g){ g=m.group; html+=`<div class="grouphead">Grupo ${g}</div>`; }
+    const r=state.results[m.id]||['',''];
+    const played=parsePair(r)?'played':'';
+    html+=`<div class="mrow ${played}">
+      <div class="mteams">
+        <span class="fl">${flag(m.home)}</span><span class="nm">${m.home}</span>
+        <span class="mid">vs</span>
+        <span class="fl">${flag(m.away)}</span><span class="nm">${m.away}</span>
+      </div>
+      <div class="score-in">
+        <input type="number" min="0" inputmode="numeric" value="${r[0]}" oninput="setResult('${m.id}',0,this.value)" aria-label="Goles ${m.home}">
+        <span class="dash">–</span>
+        <input type="number" min="0" inputmode="numeric" value="${r[1]}" oninput="setResult('${m.id}',1,this.value)" aria-label="Goles ${m.away}">
+        <button class="clr" title="Borrar" onclick="clearResult('${m.id}')">✕</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('matchWrap').innerHTML=html;
+}
+function setResult(id,which,val){
+  if(!state.results[id]) state.results[id]=['',''];
+  state.results[id][which]= val===''?'':Number(val);
+  saveDraft(); renderRanking(); renderCard();
+}
+function clearResult(id){ delete state.results[id]; saveDraft(); renderMatches(); renderRanking(); renderCard(); }
+
+/* ---- Pronósticos ---- */
+function fillWho(){
+  const sel=document.getElementById('who');
+  sel.innerHTML=DATA.participants.map(p=>`<option>${p}</option>`).join('');
+}
+function renderPronos(){
+  const p=document.getElementById('who').value;
+  let html='', g=null;
+  DATA.matches.forEach(m=>{
+    if(m.group!==g){ g=m.group; html+=`<div class="grouphead">Grupo ${g}</div>`; }
+    const pr=(state.predictions[p]&&state.predictions[p][m.id])||['',''];
+    html+=`<div class="mrow">
+      <div class="mteams">
+        <span class="fl">${flag(m.home)}</span><span class="nm">${m.home}</span>
+        <span class="mid">vs</span>
+        <span class="fl">${flag(m.away)}</span><span class="nm">${m.away}</span>
+      </div>
+      <div class="score-in">
+        <input type="number" min="0" inputmode="numeric" value="${pr[0]}" oninput="setPred('${p}','${m.id}',0,this.value)">
+        <span class="dash">–</span>
+        <input type="number" min="0" inputmode="numeric" value="${pr[1]}" oninput="setPred('${p}','${m.id}',1,this.value)">
+      </div>
+    </div>`;
+  });
+  document.getElementById('pronosWrap').innerHTML=html;
+}
+function setPred(p,id,which,val){
+  if(!state.predictions[p]) state.predictions[p]={};
+  if(!state.predictions[p][id]) state.predictions[p][id]=['',''];
+  state.predictions[p][id][which]= val===''?'':Number(val);
+  saveDraft(); renderRanking(); renderCard();
+}
+
+/* ---- Export / Import ---- */
+function exportData(){
+  const out={participants:DATA.participants, flags:DATA.flags, matches:DATA.matches,
+    predictions:state.predictions, results:state.results};
+  const js='window.QUINIELA_DATA = '+JSON.stringify(out,null,2)+';\n';
+  const blob=new Blob([js],{type:'text/javascript'});
+  const a=document.createElement('a'); a.download='data.js';
+  a.href=URL.createObjectURL(blob); a.click(); URL.revokeObjectURL(a.href);
+}
+function importData(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      let txt=rd.result.replace(/^\s*window\.QUINIELA_DATA\s*=\s*/,'').replace(/;\s*$/,'');
+      const d=JSON.parse(txt);
+      if(d.predictions) state.predictions=d.predictions;
+      if(d.results) state.results=d.results;
+      DATA.participants.forEach(p=>{ if(!state.predictions[p]) state.predictions[p]={}; });
+      saveDraft(); renderAll(); alert('Datos cargados. Recuerda Publicar para que todos los vean.');
+    }catch(e){ alert('No se pudo leer el archivo: '+e.message); }
+  };
+  rd.readAsText(f); ev.target.value='';
+}
+
+/* ---- Tabs ---- */
+function switchTab(name){
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  if(name==='ranking') renderRanking();
+  if(name==='proximo') renderCard();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(b) switchTab(b.dataset.tab);
+});
+
+function renderAll(){ renderCard(); renderRanking(); renderMatches(); renderPronos(); renderBanner(); }
+
+/* init */
+fillWho();
+renderAll();
+</script>
+</body>
+</html>
