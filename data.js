@@ -585,6 +585,10 @@ window.QUINIELA_DATA = {
       "H2": [
         1,
         2
+      ],
+      "G2": [
+        2,
+        0
       ]
     },
     "Bucho": {
@@ -909,6 +913,10 @@ window.QUINIELA_DATA = {
       "H2": [
         0,
         2
+      ],
+      "G2": [
+        2,
+        0
       ]
     },
     "Manuel": {
