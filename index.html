@@ -239,6 +239,7 @@
       <button data-scope="1">Jornada 1</button>
       <button data-scope="2">Jornada 2</button>
       <button data-scope="3">Jornada 3</button>
+      <button data-scope="16">16avos</button>
     </div>
     <div id="rankWrap"></div>
   </section>
@@ -284,6 +285,33 @@ const DATA = window.QUINIELA_DATA;
 const LS_KEY = 'quiniela_draft_v2';
 const flag = t => (DATA.flags && DATA.flags[t]) || '⚽';
 const clone = o => JSON.parse(JSON.stringify(o));
+
+/* ---- Dieciseisavos de final (Ronda de 32) · llaves confirmadas ---- */
+const KNOCKOUT = [
+  {id:"R1",  phase:"16avos", home:"Sudáfrica",      away:"Canadá"},
+  {id:"R2",  phase:"16avos", home:"Brasil",         away:"Japón"},
+  {id:"R3",  phase:"16avos", home:"Alemania",       away:"Paraguay"},
+  {id:"R4",  phase:"16avos", home:"Países Bajos",   away:"Marruecos"},
+  {id:"R5",  phase:"16avos", home:"Costa de Marfil",away:"Noruega"},
+  {id:"R6",  phase:"16avos", home:"Francia",        away:"Suecia"},
+  {id:"R7",  phase:"16avos", home:"México",         away:"Ecuador"},
+  {id:"R8",  phase:"16avos", home:"Inglaterra",     away:"RD Congo"},
+  {id:"R9",  phase:"16avos", home:"Bélgica",        away:"Senegal"},
+  {id:"R10", phase:"16avos", home:"Estados Unidos", away:"Bosnia"},
+  {id:"R11", phase:"16avos", home:"España",         away:"Austria"},
+  {id:"R12", phase:"16avos", home:"Portugal",       away:"Croacia"},
+  {id:"R13", phase:"16avos", home:"Suiza",          away:"Argelia"},
+  {id:"R14", phase:"16avos", home:"Australia",      away:"Egipto"},
+  {id:"R15", phase:"16avos", home:"Argentina",      away:"Cabo Verde"},
+  {id:"R16", phase:"16avos", home:"Colombia",       away:"Ghana"},
+];
+(function mergeKO(){
+  const ids=new Set(DATA.matches.map(m=>m.id));
+  KNOCKOUT.forEach(m=>{ if(!ids.has(m.id)) DATA.matches.push(m); });
+})();
+const isKO = m => m.phase==='16avos';
+const sectionLabel = m => isKO(m) ? 'Dieciseisavos' : ('Grupo '+m.group);
+const sectionKey = m => isKO(m) ? '16avos' : m.group;
 
 let state = loadState();
 let cardIdx = nextMatchIdx();
@@ -333,7 +361,10 @@ function standings(){
   return DATA.participants.map(p=>{
     let total=0,exact=0,played=0;
     DATA.matches.forEach(m=>{
-      if(rankScope!=='all' && jornadaOf(m)!==Number(rankScope)) return;
+      if(rankScope!=='all'){
+        if(rankScope==='16'){ if(!isKO(m)) return; }
+        else if(isKO(m) || jornadaOf(m)!==Number(rankScope)) return;
+      }
       if(parsePair(state.results[m.id])){ played++;
         const x=pts(state.predictions[p][m.id], state.results[m.id]);
         total+=x; if(x===3) exact++;
@@ -366,7 +397,7 @@ function renderCard(){
     <div class="board" id="captureCard">
       <div class="board-pad">
         <div class="board-top">
-          <span class="gbadge">Grupo ${m.group}</span>
+          <span class="gbadge">${sectionLabel(m)}</span>
           <span class="eb2">Partido ${cardIdx+1} de ${total}</span>
         </div>
         <div class="fixture">
@@ -424,7 +455,7 @@ function renderRanking(){
 function renderMatches(){
   let html='', g=null;
   DATA.matches.forEach(m=>{
-    if(m.group!==g){ g=m.group; html+=`<div class="grouphead">Grupo ${g}</div>`; }
+    if(sectionKey(m)!==g){ g=sectionKey(m); html+=`<div class="grouphead">${sectionLabel(m)}</div>`; }
     const r=state.results[m.id]||['',''];
     const played=parsePair(r)?'played':'';
     html+=`<div class="mrow ${played}">
@@ -459,7 +490,7 @@ function renderPronos(){
   const p=document.getElementById('who').value;
   let html='', g=null;
   DATA.matches.forEach(m=>{
-    if(m.group!==g){ g=m.group; html+=`<div class="grouphead">Grupo ${g}</div>`; }
+    if(sectionKey(m)!==g){ g=sectionKey(m); html+=`<div class="grouphead">${sectionLabel(m)}</div>`; }
     const pr=(state.predictions[p]&&state.predictions[p][m.id])||['',''];
     html+=`<div class="mrow">
       <div class="mteams">
